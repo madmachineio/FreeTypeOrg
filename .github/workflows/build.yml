@@ -45,7 +45,7 @@ jobs:
       - name: Build soft float
         id: build-soft
         run: |
-          echo "/user/runner/${{ env.GCC_LINUX_SDK_NAME }}/bin" >> $GITHUB_PATH
+          export PATH="/user/runner/${{ env.GCC_LINUX_SDK_NAME }}/bin":$PATH
           echo "$PATH"
           cd $GITHUB_WORKSPACE
           rm -rf .build
@@ -59,7 +59,7 @@ jobs:
       - name: Build hard float
         id: build-hard
         run: |
-          echo "~/${{ env.GCC_LINUX_SDK_NAME }}/bin" >> $GITHUB_PATH
+          export PATH="/user/runner/${{ env.GCC_LINUX_SDK_NAME }}/bin":$PATH
           cd $GITHUB_WORKSPACE
           rm -rf .build
           mkdir .build
