@@ -31,9 +31,9 @@ jobs:
           echo "Branch: `git rev-parse --abbrev-ref HEAD`"
 
       - name: Prepare gcc
-        id: prepare-sdk
+        id: prepare-gcc
         run: |
-          echo "Get gcc-sdk on $RUNNER_OS"
+          echo "Get gcc on $RUNNER_OS"
           if [ "$RUNNER_OS" == 'Linux' ];then
             wget ${{ env.GCC_LINUX_SDK }} -O ~/sdk.tar.bz2
             tar -jxvf ~/sdk.tar.bz2 -C ~/
