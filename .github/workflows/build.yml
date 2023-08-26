@@ -45,7 +45,7 @@ jobs:
       - name: Build soft float
         id: build-soft
         run: |
-          export PATH="/user/runner/${{ env.GCC_LINUX_SDK_NAME }}/bin":$PATH
+          export PATH="~/${{ env.GCC_LINUX_SDK_NAME }}/bin":$PATH
           echo "$PATH"
           cd $GITHUB_WORKSPACE
           rm -rf .build
