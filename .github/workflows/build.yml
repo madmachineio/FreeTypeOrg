@@ -51,9 +51,12 @@ jobs:
           rm -rf .build
           mkdir .build
           cd .build
-          cmake -D TARGET_FLOAT_MODE="soft" -D CMAKE_INSTALL_PREFIX=$PWD/eabi -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE ../
+          cmake -D TARGET_FLOAT_MODE="soft" -D CMAKE_INSTALL_PREFIX=$PWD/install -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE ../
           make
           make install
+          mkdir eabi
+          cp -rf install/include eabi
+          cp install/lib/libfreetype.a eabi
           mv eabi $GITHUB_WORKSPACE
 
       - name: Build hard float
@@ -63,9 +66,12 @@ jobs:
           rm -rf .build
           mkdir .build
           cd .build
-          cmake -D TARGET_FLOAT_MODE="hard" -D CMAKE_INSTALL_PREFIX=$PWD/eabihf -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE ../
+          cmake -D TARGET_FLOAT_MODE="hard" -D CMAKE_INSTALL_PREFIX=$PWD/install -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE ../
           make
           make install
+          mkdir eabihf
+          cp -rf install/include eabihf
+          cp install/lib/libfreetype.a eabihf
           mv eabihf $GITHUB_WORKSPACE
 
       - name: Upload artifacts
