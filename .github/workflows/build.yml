@@ -42,12 +42,11 @@ jobs:
             ehco "Unrecognized OS $RUNNER_OS"
             exit 1
           fi
+          echo "$GITHUB_WORKSPACE/${{ env.GCC_LINUX_SDK_NAME }}/bin" >> $GITHUB_PATH
 
       - name: Build soft float
         id: build-soft
         run: |
-          export PATH="$GITHUB_WORKSPACE/${{ env.GCC_LINUX_SDK_NAME }}/bin":$PATH
-          echo "$PATH"
           cd $GITHUB_WORKSPACE
           rm -rf .build
           mkdir .build
@@ -60,7 +59,6 @@ jobs:
       - name: Build hard float
         id: build-hard
         run: |
-          export PATH="/user/runner/${{ env.GCC_LINUX_SDK_NAME }}/bin":$PATH
           cd $GITHUB_WORKSPACE
           rm -rf .build
           mkdir .build
