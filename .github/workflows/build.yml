@@ -11,7 +11,6 @@ on:
 env:
   GCC_LINUX_SDK_NAME: "gcc-arm-none-eabi-10.3-2021.09"
   GCC_LINUX_SDK: "https://github.com/madmachineio/actions/releases/download/packages/gcc-arm-none-eabi-10.3-2021.09-x86_64-linux.tar.bz2"
-  GCC_MACOS_SDK: ""
 
 jobs:
   build:
@@ -38,9 +37,6 @@ jobs:
           if [ "$RUNNER_OS" == 'Linux' ];then
             wget ${{ env.GCC_LINUX_SDK }} -O ~/sdk.tar.bz2
             tar -jxvf ~/sdk.tar.bz2 -C ~/
-          elif [ "$RUNNER_OS" == 'macOS' ];then
-            wget ${{ env.GCC_MACOS_SDK }} -O ~/sdk.zip
-            unzip ~/sdk.zip -d ~/
           else
             ehco "Unrecognized OS $RUNNER_OS"
             exit 1
