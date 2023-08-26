@@ -35,8 +35,9 @@ jobs:
         run: |
           echo "Get gcc on $RUNNER_OS"
           if [ "$RUNNER_OS" == 'Linux' ];then
-            wget ${{ env.GCC_LINUX_SDK }} -O ~/sdk.tar.bz2
-            tar -jxvf ~/sdk.tar.bz2 -C ~/
+            cd $GITHUB_WORKSPACE
+            wget ${{ env.GCC_LINUX_SDK }} -O ./sdk.tar.bz2
+            tar -jxvf ./sdk.tar.bz2
           else
             ehco "Unrecognized OS $RUNNER_OS"
             exit 1
@@ -45,7 +46,7 @@ jobs:
       - name: Build soft float
         id: build-soft
         run: |
-          export PATH="~/${{ env.GCC_LINUX_SDK_NAME }}/bin":$PATH
+          export PATH="$GITHUB_WORKSPACE/${{ env.GCC_LINUX_SDK_NAME }}/bin":$PATH
           echo "$PATH"
           cd $GITHUB_WORKSPACE
           rm -rf .build
