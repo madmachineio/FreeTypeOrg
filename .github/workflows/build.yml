@@ -1,0 +1,81 @@
+name: build
+
+on:
+  push:
+    branches:
+      - 'release/**'
+  pull_request:
+    branches:
+      - 'release/**'
+
+env:
+  GCC_LINUX_SDK_NAME: "gcc-arm-none-eabi-10.3-2021.09"
+  GCC_LINUX_SDK: "https://github.com/madmachineio/actions/releases/download/packages/gcc-arm-none-eabi-10.3-2021.09-x86_64-linux.tar.bz2"
+  GCC_MACOS_SDK: ""
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check action type
+        run: |
+          echo "OS: $RUNNER_OS"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Commit: $GITHUB_SHA"
+          echo "Branch: `git rev-parse --abbrev-ref HEAD`"
+
+      - name: Prepare gcc
+        id: prepare-sdk
+        run: |
+          echo "Get gcc-sdk on $RUNNER_OS"
+          if [ "$RUNNER_OS" == 'Linux' ];then
+            wget ${{ env.GCC_LINUX_SDK }} -O ~/sdk.tar.bz2
+            tar -jxvf ~/sdk.tar.bz2 -C ~/
+          elif [ "$RUNNER_OS" == 'macOS' ];then
+            wget ${{ env.GCC_MACOS_SDK }} -O ~/sdk.zip
+            unzip ~/sdk.zip -d ~/
+          else
+            ehco "Unrecognized OS $RUNNER_OS"
+            exit 1
+          fi
+          echo "~/${{ env.GCC_LINUX_SDK_NAME }}/bin" >> $GITHUB_PATH
+
+      - name: Build soft float
+        id: build-soft
+        run: |
+          cd $GITHUB_WORKSPACE
+          rm -rf .build
+          mkdir .build
+          cd .build
+          cmake -D TARGET_FLOAT_MODE="soft" -D CMAKE_INSTALL_PREFIX=$PWD/eabi -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE ../
+          make
+          make install
+          mv eabi $GITHUB_WORKSPACE
+
+      - name: Build hard float
+        id: build-hard
+        run: |
+          cd $GITHUB_WORKSPACE
+          rm -rf .build
+          mkdir .build
+          cd .build
+          cmake -D TARGET_FLOAT_MODE="hard" -D CMAKE_INSTALL_PREFIX=$PWD/eabihf -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE -D CMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE ../
+          make
+          make install
+          mv eabihf $GITHUB_WORKSPACE
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: FreeTypeLib
+          path: |
+            eabi
+            eabihf
+          retention-days: 30
