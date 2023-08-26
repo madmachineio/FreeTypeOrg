@@ -45,7 +45,8 @@ jobs:
       - name: Build soft float
         id: build-soft
         run: |
-          echo "~/${{ env.GCC_LINUX_SDK_NAME }}/bin" >> $GITHUB_PATH
+          echo "/user/runner/${{ env.GCC_LINUX_SDK_NAME }}/bin" >> $GITHUB_PATH
+          echo "$PATH"
           cd $GITHUB_WORKSPACE
           rm -rf .build
           mkdir .build

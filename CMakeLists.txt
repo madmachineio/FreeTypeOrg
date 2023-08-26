@@ -162,10 +162,6 @@ endif ()
 
 project(freetype C)
 
-set(VERSION_MAJOR "2")
-set(VERSION_MINOR "13")
-set(VERSION_PATCH "2")
-
 SET(CMAKE_C_COMPILER arm-none-eabi-gcc)
 
 if (TARGET_FLOAT_MODE STREQUAL "soft")
@@ -177,6 +173,10 @@ else ()
 endif ()
 
 ADD_COMPILE_OPTIONS(-Os -ffreestanding -fno-common -g -mcpu=cortex-m7 -mthumb -mabi=aapcs -Wall -Wformat -Wformat-security -Wno-format-zero-length -Wno-main -Wno-pointer-sign -Wpointer-arith -Wno-address-of-packed-member -Wno-unused-but-set-variable -Werror=implicit-int -fno-asynchronous-unwind-tables -fno-pie -fno-pic -fno-strict-overflow -fno-short-enums -fno-reorder-functions -fno-defer-pop -ffunction-sections -fdata-sections -std=c99)
+
+set(VERSION_MAJOR "2")
+set(VERSION_MINOR "13")
+set(VERSION_PATCH "2")
 
 # Generate LIBRARY_VERSION and LIBRARY_SOVERSION.
 set(LIBTOOL_REGEX "version_info='([0-9]+):([0-9]+):([0-9]+)'")
